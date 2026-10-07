@@ -1,16 +1,20 @@
-# This is a sample Python script.
+import http.server
+import socketserver
+import os
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# Указываем порт, на котором запустится сайт
+PORT = 8000
 
+# Настройка веб-сервера для раздачи статических HTML/CSS/JS файлов
+Handler = http.server.SimpleHTTPRequestHandler
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+# Переходим в директорию проекта, чтобы сервер видел файл index.html
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+print(f"Запуск сервера... Откройте в браузере: http://localhost:{PORT}")
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+try:
+    with socketserver.TCPServer(("", PORT), Handler) as httpd:
+        httpd.serve_forever()
+except KeyboardInterrupt:
+    print("\nСервер успешно остановлен.")
